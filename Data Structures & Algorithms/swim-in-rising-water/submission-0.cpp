@@ -1,0 +1,59 @@
+class Solution {
+public:
+    int swimInWater(vector<vector<int>>& grid) {
+
+        int n = grid.size();
+
+        vector<vector<bool>> visited(n, vector<bool>(n, false));
+
+        priority_queue<
+            vector<int>,
+            vector<vector<int>>,
+            greater<vector<int>>
+        > pq;
+
+        pq.push({grid[0][0], 0, 0});
+
+        vector<pair<int,int>> directions = {
+            {1,0},
+            {-1,0},
+            {0,1},
+            {0,-1}
+        };
+
+        while (!pq.empty()) {
+
+            auto curr = pq.top();
+            pq.pop();
+
+            int time = curr[0];
+            int row = curr[1];
+            int col = curr[2];
+
+            if (visited[row][col])
+                continue;
+
+            visited[row][col] = true;
+
+            if (row == n - 1 && col == n - 1)
+                return time;
+
+            for (auto &[dr, dc] : directions) {
+
+                int newRow = row + dr;
+                int newCol = col + dc;
+
+                if (newRow >= 0 && newRow < n &&
+                    newCol >= 0 && newCol < n &&
+                    !visited[newRow][newCol]) {
+
+                    int newTime = max(time, grid[newRow][newCol]);
+
+                    pq.push({newTime, newRow, newCol});
+                }
+            }
+        }
+
+        return -1;
+    }
+};
